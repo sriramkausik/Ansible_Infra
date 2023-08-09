@@ -1,0 +1,11 @@
+<powershell>
+#New-Item -path c:\hi.txt
+$username = "Ansible"
+$password = "Travel@2020"
+net user $username $password /add
+net localgroup Administrators $username /add
+#New-LocalUser -Name 'Ansible' -NoPassword -AccountNeverExpires true -UserMayNotChangePassword true
+#Add-LocalGroupMember -Group "Administrators" -Member 'Ansible'
+winrm set winrm/config/service '@{AllowUnencrypted="true"}'
+Set-Item -Force WSMan:\localhost\Service\auth\Basic $true
+</powershell>

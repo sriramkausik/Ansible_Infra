@@ -1,0 +1,1 @@
+﻿New-Item -path c:\hi.txt
