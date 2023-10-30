@@ -44,7 +44,7 @@ resource "aws_vpc" "VPCFROMTF" {
     availability_zone = "us-east-1a" 
     vpc_id= aws_vpc.VPCFROMTF.id
   tags = {
-        Name = "TFSUBNET"
+        Name = "TFSUBNET1a"
   }
     
   }
@@ -53,7 +53,7 @@ resource "aws_subnet" "SUBNETFROMTF" {
   availability_zone = "us-east-1b" 
   vpc_id= aws_vpc.VPCFROMTF.id
   tags = {
-        Name = "TFSUBNET"
+        Name = "TFSUBNET1b"
   }
   
 }
@@ -253,6 +253,25 @@ resource "aws_network_interface_sg_attachment" "sg_attachment1" {
   security_group_id    = aws_security_group.allow_full.id
   network_interface_id = aws_instance.Ansible-Master.primary_network_interface_id
 }
+resource "aws_network_interface_sg_attachment" "sg_attachment4" {
+  security_group_id    = aws_security_group.allow_full.id
+  network_interface_id = aws_instance.Web-server.primary_network_interface_id
+}
+
+resource "aws_network_interface_sg_attachment" "sg_attachment5" {
+  security_group_id    = aws_security_group.allow_full.id
+  network_interface_id = aws_instance.Web-server1b.primary_network_interface_id
+}
+
+resource "aws_network_interface_sg_attachment" "sg_attachment6" {
+  security_group_id    = aws_security_group.allow_full.id
+  network_interface_id = aws_instance.Second-Web-server-1b.primary_network_interface_id
+}
+
+resource "aws_network_interface_sg_attachment" "sg_attachment7" {
+  security_group_id    = aws_security_group.allow_full.id
+  network_interface_id = aws_instance.Second-Web-server-1a.primary_network_interface_id
+}
 
 resource "aws_route_table" "RT" {
   vpc_id = aws_vpc.VPCFROMTF.id
@@ -270,6 +289,11 @@ resource "aws_route_table" "RT" {
 
 resource "aws_route_table_association" "RTA" {
   subnet_id      = aws_subnet.SUBNETFROMTF.id
+  route_table_id = aws_route_table.RT.id
+}
+
+resource "aws_route_table_association" "RTA1" {
+  subnet_id      = aws_subnet.SUBNETONEFROMTF.id
   route_table_id = aws_route_table.RT.id
 }
 
@@ -305,6 +329,101 @@ resource "aws_instance" "Ansible-Master" {
 }
 }
 
+#Adding Amazon Linux instances (Web servers for EC2 refresh practice)
 
+resource "aws_instance" "Web-server1b" {
+  ami = "ami-0dbc3d7bc646e8516"
+  subnet_id = aws_subnet.SUBNETFROMTF.id
+  instance_type = "t2.micro"
+  key_name = "tf-key-pair"
+  associate_public_ip_address = true
+  iam_instance_profile = aws_iam_instance_profile.ec2-ssm-role.name
+    user_data = <<-EOF
+    #!/bin/bash
+    # Use this for your user data (script from top to bottom)
+    # install httpd (Linux 2 version)
+    yum update -y
+    yum install -y httpd
+    systemctl start httpd
+    systemctl enable httpd
+    echo "<h1>Hello World from $(hostname -f)</h1>" > /var/www/html/index.html
+  EOF
+      
 
+  tags ={
+  Name="First-Web-Server-1b"
+}
+}
+resource "aws_instance" "Web-server" {
+  ami = "ami-0dbc3d7bc646e8516"
+ 
+  subnet_id = aws_subnet.SUBNETONEFROMTF.id
+  instance_type = "t2.micro"
+  key_name = "tf-key-pair"
+  associate_public_ip_address = true
+  iam_instance_profile = aws_iam_instance_profile.ec2-ssm-role.name
+    user_data = <<-EOF
+    #!/bin/bash
+    # Use this for your user data (script from top to bottom)
+    # install httpd (Linux 2 version)
+    yum update -y
+    yum install -y httpd
+    systemctl start httpd
+    systemctl enable httpd
+    echo "<h1>Hello World from $(hostname -f)</h1>" > /var/www/html/index.html
+  EOF
+      
 
+  tags ={
+  Name="First-Web-Server-1a"
+}
+}
+
+resource "aws_instance" "Second-Web-server-1a" {
+  ami = "ami-0dbc3d7bc646e8516"
+ 
+  subnet_id = aws_subnet.SUBNETONEFROMTF.id
+  instance_type = "t2.micro"
+  key_name = "tf-key-pair"
+  associate_public_ip_address = true
+  iam_instance_profile = aws_iam_instance_profile.ec2-ssm-role.name
+    user_data = <<-EOF
+    #!/bin/bash
+    # Use this for your user data (script from top to bottom)
+    # install httpd (Linux 2 version)
+    yum update -y
+    yum install -y httpd
+    systemctl start httpd
+    systemctl enable httpd
+    echo "<h1>Hello World from $(hostname -f)</h1>" > /var/www/html/index.html
+  EOF
+      
+
+  tags ={
+  Name="Second-Web-Server-1a"
+}
+}
+
+resource "aws_instance" "Second-Web-server-1b" {
+  ami = "ami-0dbc3d7bc646e8516"
+  subnet_id = aws_subnet.SUBNETFROMTF.id
+  instance_type = "t2.micro"
+  key_name = "tf-key-pair"
+  associate_public_ip_address = true
+  iam_instance_profile = aws_iam_instance_profile.ec2-ssm-role.name
+    user_data = <<-EOF
+    #!/bin/bash
+    # Use this for your user data (script from top to bottom)
+    # install httpd (Linux 2 version)
+    yum update -y
+    yum install -y httpd
+    systemctl start httpd
+    systemctl enable httpd
+    echo "<h1>Hello World from $(hostname -f)</h1>" > /var/www/html/index.html
+  EOF
+      
+
+  tags ={
+  Name="Second-Web-Server-1b"
+}
+}
