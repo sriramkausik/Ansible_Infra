@@ -15,8 +15,8 @@ terraform {
 
 provider "aws" {
   region = "us-east-1"
-  access_key = var.AccessKeyID
-  secret_key = var.SecretAccessKey
+  access_key = ""
+  secret_key = ""
 }
 
 resource "aws_key_pair" "tf-key-pair" {
@@ -69,21 +69,21 @@ resource "aws_internet_gateway" "IGWFROMTF" {
 }
 
 
-/* //Create a simple AD
-resource "aws_directory_service_directory" "bar" {
-  name     = "India.com"
-  password = "Travel@2020"
-  size     = "Small"
+# //Create a simple AD
+# resource "aws_directory_service_directory" "bar" {
+#   name     = "India.com"
+#   password = "Travel@2020"
+#   size     = "Small"
 
-  vpc_settings {
-    vpc_id     = aws_vpc.VPCFROMTF.id
-    subnet_ids = [aws_subnet.SUBNETONEFROMTF.id, aws_subnet.SUBNETFROMTF.id]
-  }
+#   vpc_settings {
+#     vpc_id     = aws_vpc.VPCFROMTF.id
+#     subnet_ids = [aws_subnet.SUBNETONEFROMTF.id, aws_subnet.SUBNETFROMTF.id]
+#   }
 
-  tags = {
-    Project = "SimpleAD"
-  }
-} */
+#   tags = {
+#     Project = "SimpleAD"
+#   }
+# }
 
 //Create a IAM role with 3 policy attached.
 
@@ -134,7 +134,7 @@ resource "aws_iam_instance_profile" "ec2-ssm-role" {
 
 resource "aws_instance" "EC2FROMTF" {
   #name="EC2FROMTF"
-  ami = "ami-0fc682b2a42e57ca2"
+  ami = "ami-0c24dc9d92f3c28ea"
   subnet_id = aws_subnet.SUBNETFROMTF.id
   iam_instance_profile = aws_iam_instance_profile.ec2-ssm-role.name
   instance_type = "t2.micro"
@@ -150,7 +150,7 @@ resource "aws_instance" "EC2FROMTF" {
 #2nd Windows server
 
 resource "aws_instance" "Win-2" {
-  ami = "ami-0fc682b2a42e57ca2"
+  ami = "ami-0c24dc9d92f3c28ea"
   subnet_id = aws_subnet.SUBNETFROMTF.id
   instance_type = "t2.micro"
   key_name = "tf-key-pair"
@@ -164,7 +164,7 @@ resource "aws_instance" "Win-2" {
 
 #3rd Windows server
 resource "aws_instance" "Win-3" {
-  ami = "ami-0fc682b2a42e57ca2"
+  ami = "ami-0c24dc9d92f3c28ea"
   subnet_id = aws_subnet.SUBNETFROMTF.id
   instance_type = "t2.micro"
   key_name = "tf-key-pair"
@@ -178,35 +178,35 @@ user_data = base64encode(file("${"userdata.txt"}" ))
 }
 
 
-/* //Domain Join
-resource "aws_ssm_document" "ssm_document" {
-  name          = "ssm_document_example.com"
-  document_type = "Command"
-  content       = <<DOC
-{
-    "schemaVersion": "1.0",
-    "description": "Automatic Domain Join Configuration",
-    "runtimeConfig": {
-        "aws:domainJoin": {
-            "properties": {
-                "directoryId": "${aws_directory_service_directory.bar.id}",
-                "directoryName": "India.com",
-                "dnsIpAddresses": ${jsonencode(aws_directory_service_directory.bar.dns_ip_addresses)}
-            }
-        }
-    }
-}
-DOC
-} 
+# //Domain Join
+# resource "aws_ssm_document" "ssm_document" {
+#   name          = "ssm_document_example.com"
+#   document_type = "Command"
+#   content       = <<DOC
+# {
+#     "schemaVersion": "1.0",
+#     "description": "Automatic Domain Join Configuration",
+#     "runtimeConfig": {
+#         "aws:domainJoin": {
+#             "properties": {
+#                 "directoryId": "${aws_directory_service_directory.bar.id}",
+#                 "directoryName": "India.com",
+#                 "dnsIpAddresses": ${jsonencode(aws_directory_service_directory.bar.dns_ip_addresses)}
+#             }
+#         }
+#     }
+# }
+# DOC
+# }
 
-resource "aws_ssm_association" "associate_ssm" {
-  name        = aws_ssm_document.ssm_document.name
+# resource "aws_ssm_association" "associate_ssm" {
+#   name        = aws_ssm_document.ssm_document.name
  
-  targets {
-    key    = "InstanceIds"
-    values = [aws_instance.EC2FROMTF.id]
-  }
-} */
+#   targets {
+#     key    = "InstanceIds"
+#     values = [aws_instance.EC2FROMTF.id]
+#   }
+# }
 
 //SG group :
 
@@ -238,16 +238,6 @@ resource "aws_security_group" "allow_full" {
 resource "aws_network_interface_sg_attachment" "sg_attachment" {
   security_group_id    = aws_security_group.allow_full.id
   network_interface_id = aws_instance.EC2FROMTF.primary_network_interface_id
-}
-
-resource "aws_network_interface_sg_attachment" "sg_attachment2" {
-  security_group_id    = aws_security_group.allow_full.id
-  network_interface_id = aws_instance.Win-3.primary_network_interface_id
-}
-
-resource "aws_network_interface_sg_attachment" "sg_attachment3" {
-  security_group_id    = aws_security_group.allow_full.id
-  network_interface_id = aws_instance.Win-2.primary_network_interface_id
 }
 resource "aws_network_interface_sg_attachment" "sg_attachment1" {
   security_group_id    = aws_security_group.allow_full.id
