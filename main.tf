@@ -15,8 +15,8 @@ terraform {
 
 provider "aws" {
   region = "us-east-1"
-  access_key = "AKIAZQ3DU6IYPS46MQ6Q"
-  secret_key = "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"
+  access_key = ""
+  secret_key = ""
 }
 
 resource "aws_key_pair" "tf-key-pair" {
@@ -72,7 +72,7 @@ resource "aws_internet_gateway" "IGWFROMTF" {
 # //Create a simple AD
 # resource "aws_directory_service_directory" "bar" {
 #   name     = "India.com"
-#   password = "Travel@2020"
+#   password = "India@2020"
 #   size     = "Small"
 
 #   vpc_settings {
