@@ -89,45 +89,45 @@ resource "aws_internet_gateway" "IGWFROMTF" {
 
 
 
-resource "aws_iam_role" "ec2-ssm-role" {
-name = "EC2SSMROLE"
-  assume_role_policy = <<EOF
-{
-    "Version": "2012-10-17",
-    "Statement": [
-      {
-        "Effect": "Allow",
-        "Principal": {
-          "Service": "ec2.amazonaws.com"
-        },
-        "Action": "sts:AssumeRole"
-      }
-    ]
-}
-EOF
+#resource "aws_iam_role" "ec2-ssm-role" {
+# name = "EC2SSMROLE"
+#   assume_role_policy = <<EOF
+# {
+#     "Version": "2012-10-17",
+#     "Statement": [
+#       {
+#         "Effect": "Allow",
+#         "Principal": {
+#           "Service": "ec2.amazonaws.com"
+#         },
+#         "Action": "sts:AssumeRole"
+#       }
+#     ]
+# }
+# EOF
 
-}
+# }
 
 
-resource "aws_iam_role_policy_attachment" "AmazonSSMFullAccess" {
-  role       = aws_iam_role.ec2-ssm-role.id
-  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMFullAccess"
-}
+# resource "aws_iam_role_policy_attachment" "AmazonSSMFullAccess" {
+#   role       = aws_iam_role.ec2-ssm-role.id
+#   policy_arn = "arn:aws:iam::aws:policy/AmazonSSMFullAccess"
+# }
 
-resource "aws_iam_role_policy_attachment" "AmazonSSMDirectoryServiceAccess" {
-  role       = aws_iam_role.ec2-ssm-role.id
-  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMDirectoryServiceAccess"
-}
+# resource "aws_iam_role_policy_attachment" "AmazonSSMDirectoryServiceAccess" {
+#   role       = aws_iam_role.ec2-ssm-role.id
+#   policy_arn = "arn:aws:iam::aws:policy/AmazonSSMDirectoryServiceAccess"
+# }
 
-resource "aws_iam_role_policy_attachment" "AmazonSSMManagedInstanceCore" {
-  role       = aws_iam_role.ec2-ssm-role.id
-  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
-}
+# resource "aws_iam_role_policy_attachment" "AmazonSSMManagedInstanceCore" {
+#   role       = aws_iam_role.ec2-ssm-role.id
+#   policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+# }
 
-resource "aws_iam_instance_profile" "ec2-ssm-role" {
-  name = "ec2-ssm-role"
-  role = aws_iam_role.ec2-ssm-role.name
-}
+# resource "aws_iam_instance_profile" "ec2-ssm-role" {
+#   name = "ec2-ssm-role"
+#   role = aws_iam_role.ec2-ssm-role.name
+# }
 
 # First windows
 //Create an EC2 instance windows
@@ -136,7 +136,7 @@ resource "aws_instance" "EC2FROMTF" {
   #name="EC2FROMTF"
   ami = "ami-0623bc4c9a53fe562"
   subnet_id = aws_subnet.SUBNETFROMTF.id
-  iam_instance_profile = aws_iam_instance_profile.ec2-ssm-role.name
+  #iam_instance_profile = aws_iam_instance_profile.ec2-ssm-role.name
   instance_type = "t2.micro"
   associate_public_ip_address = true
   user_data = base64encode(file("${"userdata.txt"}"))
@@ -155,7 +155,7 @@ resource "aws_instance" "Win-2" {
   instance_type = "t2.micro"
   key_name = "tf-key-pair"
   associate_public_ip_address = true
-  iam_instance_profile = aws_iam_instance_profile.ec2-ssm-role.name
+  #iam_instance_profile = aws_iam_instance_profile.ec2-ssm-role.name
   user_data = base64encode(file("${"userdata.txt"}" )) 
   tags ={
   Name="Win-2"
@@ -169,8 +169,8 @@ resource "aws_instance" "Win-3" {
   instance_type = "t2.micro"
   key_name = "tf-key-pair"
   associate_public_ip_address = true
-  iam_instance_profile = aws_iam_instance_profile.ec2-ssm-role.name
-user_data = base64encode(file("${"userdata.txt"}" ))
+  #iam_instance_profile = aws_iam_instance_profile.ec2-ssm-role.name
+  user_data = base64encode(file("${"userdata.txt"}" ))
 
   tags ={
   Name="Win-3"
@@ -269,7 +269,7 @@ resource "aws_instance" "Ansible-Master" {
   instance_type = "t2.micro"
   key_name = "tf-key-pair"
   associate_public_ip_address = true
-  iam_instance_profile = aws_iam_instance_profile.ec2-ssm-role.name
+  #iam_instance_profile = aws_iam_instance_profile.ec2-ssm-role.name
     user_data = <<-EOF
     #!/bin/bash
     sudo apt update -y
