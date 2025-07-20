@@ -15,8 +15,8 @@ terraform {
 
 provider "aws" {
   region = "us-east-1"
-  access_key = "5yWI[ehrwl^ZCK}44D1!"
-  secret_key = "RwYYIIBUa74+Qij04HMnpppuWRMUTc1nBD8WC2x/"
+  access_key = var.AccessKeyID
+  secret_key = var.SecretAccessKey
 }
 
 resource "aws_key_pair" "tf-key-pair" {
@@ -134,12 +134,12 @@ resource "aws_iam_instance_profile" "ec2-ssm-role" {
 
 resource "aws_instance" "EC2FROMTF" {
   #name="EC2FROMTF"
-  ami = "ami-0c24dc9d92f3c28ea"
+  ami = "ami-0623bc4c9a53fe562"
   subnet_id = aws_subnet.SUBNETFROMTF.id
   iam_instance_profile = aws_iam_instance_profile.ec2-ssm-role.name
   instance_type = "t2.micro"
   associate_public_ip_address = true
- user_data = base64encode(file("${"userdata.txt"}"))
+  user_data = base64encode(file("${"userdata.txt"}"))
 
 
   tags ={
@@ -150,7 +150,7 @@ resource "aws_instance" "EC2FROMTF" {
 #2nd Windows server
 
 resource "aws_instance" "Win-2" {
-  ami = "ami-0c24dc9d92f3c28ea"
+  ami = "ami-0623bc4c9a53fe562"
   subnet_id = aws_subnet.SUBNETFROMTF.id
   instance_type = "t2.micro"
   key_name = "tf-key-pair"
@@ -164,7 +164,7 @@ resource "aws_instance" "Win-2" {
 
 #3rd Windows server
 resource "aws_instance" "Win-3" {
-  ami = "ami-0c24dc9d92f3c28ea"
+  ami = "ami-0623bc4c9a53fe562"
   subnet_id = aws_subnet.SUBNETFROMTF.id
   instance_type = "t2.micro"
   key_name = "tf-key-pair"
