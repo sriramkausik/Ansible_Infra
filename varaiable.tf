@@ -11,7 +11,7 @@ variable "AccessKeyID"{
 }
 
 variable "SecretAccessKey"{
-    default = "rpJ86bf9G2/cc31In4W89fWaSMntXmLk1P4g/iVx"
+    default = "CwhfRseuTzfO6RvXYZ8IpHGj+KtSgwU7OZIpjJ10"
 }
 
 # output Ansible_Master_Server{
