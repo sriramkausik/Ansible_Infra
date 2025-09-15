@@ -162,20 +162,20 @@ resource "aws_instance" "Win-2" {
 }
 }
 
-# #3rd Windows server
-#resource "aws_instance" "Win-3" {
- # ami = "ami-0623bc4c9a53fe562"
-  #subnet_id = aws_subnet.SUBNETFROMTF.id
-  #instance_type = "t2.micro"
-  #key_name = "tf-key-pair"
-  #associate_public_ip_address = true
-  #iam_instance_profile = aws_iam_instance_profile.ec2-ssm-role.name
-  #user_data = base64encode(file("${"userdata.txt"}" ))
+ #3rd Windows server
+resource "aws_instance" "Win-3" {
+  ami = "ami-0623bc4c9a53fe562"
+  subnet_id = aws_subnet.SUBNETFROMTF.id
+  instance_type = "t2.micro"
+  key_name = "tf-key-pair"
+  associate_public_ip_address = true
+  iam_instance_profile = aws_iam_instance_profile.ec2-ssm-role.name
+  user_data = base64encode(file("${"userdata.txt"}" ))
 
-  #tags ={
-  #Name="Win-3"
-#}
-#}
+  tags ={
+  Name="Win-3"
+}
+}
 
 
 # //Domain Join
