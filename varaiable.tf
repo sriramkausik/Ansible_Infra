@@ -7,11 +7,11 @@ variable "Subnet"{
 }
 
 variable "AccessKeyID"{
-    default = "AKIA3FLDXDCUBVDTUCA6"
+    default = "AKIA4MTWJDTBSQR2XC4P"
 }
 
 variable "SecretAccessKey"{
-    default = "j5pd/0c9xzz13EQNQpEObC6nKClmj2GusBl9vKN2"
+    default = "X5T2zN/crEkuL6VMpP6rZhukK5bl7lEZN8zcvsG1"
 }
 
 # output Ansible_Master_Server{
